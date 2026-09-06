@@ -1,0 +1,5 @@
+entity_id,entity_name,country,currency,weight
+ENT-01,Apex Global Corp (HQ),United States,USD,0.45
+ENT-02,Apex Iberia Logistics S.L.,Spain,EUR,0.25
+ENT-03,Apex Andina Soluciones S.A.S.,Colombia,COP,0.18
+ENT-04,Apex Operaciones del Caribe C.A.,Venezuela,VES,0.12

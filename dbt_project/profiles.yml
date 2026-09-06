@@ -1,0 +1,7 @@
+enterprise_lakehouse:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../data/gold/enterprise_warehouse.duckdb"
+      threads: 4

@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Large raw datasets (generated on-demand with python src/generator/generate_ledger.py)
+data/raw/general_ledger_entries.csv
+
+# DuckDB database & lock files
+*.duckdb
+*.duckdb.wal
+
+# dbt artifacts & user config
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+dbt_project/.user.yml
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

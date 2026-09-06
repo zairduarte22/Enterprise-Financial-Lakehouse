@@ -1,0 +1,65 @@
+version: 2
+
+models:
+  - name: fct_libro_mayor
+    description: "Tabla de hechos del Libro Mayor con granularidad de línea contable individual en esquema estrella."
+    columns:
+      - name: ledger_line_key
+        description: "Surrogate primary key única de la línea de asiento."
+        tests:
+          - unique
+          - not_null
+      - name: date_key
+        description: "Foreign key hacia dim_calendario (YYYYMMDD)."
+        tests:
+          - not_null
+      - name: account_key
+        description: "Foreign key hacia dim_cuentas_contables."
+        tests:
+          - not_null
+      - name: entity_key
+        description: "Foreign key hacia dim_entidades."
+        tests:
+          - not_null
+      - name: amount_usd
+        description: "Monto financiero normalizado en USD corporativo."
+        tests:
+          - not_null
+
+  - name: dim_cuentas_contables
+    description: "Dimensión del Plan de Cuentas IFRS con jerarquía contable y naturaleza."
+    columns:
+      - name: account_key
+        description: "Surrogate key única de la cuenta."
+        tests:
+          - unique
+          - not_null
+      - name: account_code
+        description: "Código contable normalizado."
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_entidades
+    description: "Dimensión de subsidiarias y filiales internacionales."
+    columns:
+      - name: entity_key
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_centros_costo
+    description: "Dimensión de centros de imputación operativa y funcional."
+    columns:
+      - name: cost_center_key
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_calendario
+    description: "Dimensión de tiempo diaria con atributos de año fiscal y trimestre."
+    columns:
+      - name: date_key
+        tests:
+          - unique
+          - not_null
