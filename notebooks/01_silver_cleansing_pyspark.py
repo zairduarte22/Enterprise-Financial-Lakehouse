@@ -28,7 +28,14 @@ from pyspark.sql.functions import (
     count, sum as spark_sum, abs as spark_abs, max as spark_max
 )
 
-# En Databricks, spark ya viene pre-inicializado. Si se corre fuera, inicializamos:
+# En Databricks, spark y display() vienen pre-inicializados.
+# Definimos fallback para compatibilidad con linters locales de Python / IDEs:
+try:
+    display  # type: ignore
+except NameError:
+    def display(df):
+        df.show()
+
 spark = SparkSession.builder \
     .appName("EnterpriseFinancialLakehouse-Silver") \
     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension") \
