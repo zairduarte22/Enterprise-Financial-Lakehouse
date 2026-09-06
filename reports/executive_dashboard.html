@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Financial Lakehouse - Executive P&L Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Outfit', sans-serif; background-color: #0f172a; color: #f8fafc; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+  <div class="max-w-7xl mx-auto space-y-6">
+    
+    <!-- HEADER -->
+    <header class="glass-card rounded-2xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 border-l-4 border-purple-500">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+            🥇 Capa Gold · DuckDB Star Schema
+          </span>
+          <span class="text-xs font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            ✓ 17/17 Tests dbt PASS
+          </span>
+        </div>
+        <h1 class="text-3xl font-bold tracking-tight text-white">Enterprise Financial Lakehouse</h1>
+        <p class="text-sm text-slate-400 mt-1">Consumo Analítico OLAP de 300,000 Transacciones Multimoneda (USD, EUR, COP, VES)</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="text-right">
+          <div class="text-xs font-mono text-slate-400">Motor Analítico</div>
+          <div class="text-sm font-bold text-amber-400 font-mono">DuckDB 1.11 (29.5 ms)</div>
+        </div>
+        <a href="https://github.com/zairduarte22/Enterprise-Financial-Lakehouse" target="_blank" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold font-mono transition-all shadow-lg shadow-purple-600/20">
+          Ver Código GitHub
+        </a>
+      </div>
+    </header>
+
+    <!-- KPI CARDS -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="glass-card p-5 rounded-2xl">
+        <div class="text-xs font-mono text-slate-400 uppercase">Ingresos Totales (USD)</div>
+        <div class="text-2xl md:text-3xl font-bold text-white mt-1">$974,378,282.89</div>
+        <div class="text-xs text-emerald-400 mt-1 font-mono">↑ 300,000 transacciones</div>
+      </div>
+      <div class="glass-card p-5 rounded-2xl">
+        <div class="text-xs font-mono text-slate-400 uppercase">Costos de Ventas (COGS)</div>
+        <div class="text-2xl md:text-3xl font-bold text-amber-400 mt-1">$115,272,830.19</div>
+        <div class="text-xs text-slate-400 mt-1 font-mono">Margen Bruto: 88.2%</div>
+      </div>
+      <div class="glass-card p-5 rounded-2xl">
+        <div class="text-xs font-mono text-slate-400 uppercase">Gastos Operativos (OPEX)</div>
+        <div class="text-2xl md:text-3xl font-bold text-rose-400 mt-1">$1,433,781,855.76</div>
+        <div class="text-xs text-slate-400 mt-1 font-mono">Nómina, Cloud TI, Marketing</div>
+      </div>
+      <div class="glass-card p-5 rounded-2xl border-emerald-500/30">
+        <div class="text-xs font-mono text-slate-400 uppercase">Auditoría Partida Doble</div>
+        <div class="text-2xl md:text-3xl font-bold text-emerald-400 mt-1">$0.00 USD</div>
+        <div class="text-xs text-emerald-400 mt-1 font-mono">✓ Cuadre Débito = Crédito</div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 1 -->
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Chart 1: P&L Multianual -->
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-white">Estado de Resultados Multianual (P&L)</h2>
+          <span class="text-xs font-mono text-slate-400">Valores en Millones USD</span>
+        </div>
+        <div class="h-64">
+          <canvas id="chartPnl"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 2: Ingresos por Filial -->
+      <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-white">Rendimiento por Filial Multinacional</h2>
+          <span class="text-xs font-mono text-slate-400">4 Entidades Consolidadas</span>
+        </div>
+        <div class="h-64">
+          <canvas id="chartEntity"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 2 -->
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Chart 3: Centros de Costos -->
+      <div class="glass-card p-6 rounded-2xl space-y-4 md:col-span-1">
+        <h2 class="text-lg font-bold text-white">Gastos por Centro de Costo</h2>
+        <div class="h-64 flex items-center justify-center">
+          <canvas id="chartCC"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 4: Tendencia Mensual -->
+      <div class="glass-card p-6 rounded-2xl space-y-4 md:col-span-2">
+        <div class="flex items-center justify-between">
+          <h2 class="text-lg font-bold text-white">Tendencia Mensual de Ingresos y Gastos (2024-2026)</h2>
+          <span class="text-xs font-mono text-purple-400">32 Meses Particionados</span>
+        </div>
+        <div class="h-64">
+          <canvas id="chartMonthly"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- P&L TABLE -->
+    <div class="glass-card rounded-2xl p-6 overflow-hidden">
+      <h2 class="text-lg font-bold text-white mb-4">Detalle de Cierre Fiscal (Esquema Estrella)</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left font-mono text-sm">
+          <thead>
+            <tr class="border-b border-slate-700 text-slate-400 text-xs">
+              <th class="py-3 px-4">Periodo Fiscal</th>
+              <th class="py-3 px-4 text-right">Ingresos Netos (USD)</th>
+              <th class="py-3 px-4 text-right">Costo Ventas (USD)</th>
+              <th class="py-3 px-4 text-right">Utilidad Bruta (USD)</th>
+              <th class="py-3 px-4 text-right">Gastos Operativos (USD)</th>
+              <th class="py-3 px-4 text-right">Margen Bruto</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800">
+            
+            <tr class="hover:bg-slate-800/40 transition-colors">
+              <td class="py-3 px-4 font-bold text-purple-400">FY2024</td>
+              <td class="py-3 px-4 text-right text-slate-200">$365,784,541.84</td>
+              <td class="py-3 px-4 text-right text-amber-400">$42,889,482.55</td>
+              <td class="py-3 px-4 text-right text-emerald-400 font-semibold">$322,895,059.29</td>
+              <td class="py-3 px-4 text-right text-rose-400">$531,106,601.67</td>
+              <td class="py-3 px-4 text-right font-bold text-emerald-400">88.3%</td>
+            </tr>
+            
+            <tr class="hover:bg-slate-800/40 transition-colors">
+              <td class="py-3 px-4 font-bold text-purple-400">FY2025</td>
+              <td class="py-3 px-4 text-right text-slate-200">$368,784,101.31</td>
+              <td class="py-3 px-4 text-right text-amber-400">$43,128,213.75</td>
+              <td class="py-3 px-4 text-right text-emerald-400 font-semibold">$325,655,887.56</td>
+              <td class="py-3 px-4 text-right text-rose-400">$539,295,520.67</td>
+              <td class="py-3 px-4 text-right font-bold text-emerald-400">88.3%</td>
+            </tr>
+            
+            <tr class="hover:bg-slate-800/40 transition-colors">
+              <td class="py-3 px-4 font-bold text-purple-400">FY2026</td>
+              <td class="py-3 px-4 text-right text-slate-200">$239,809,639.74</td>
+              <td class="py-3 px-4 text-right text-amber-400">$29,255,133.89</td>
+              <td class="py-3 px-4 text-right text-emerald-400 font-semibold">$210,554,505.85</td>
+              <td class="py-3 px-4 text-right text-rose-400">$363,379,733.42</td>
+              <td class="py-3 px-4 text-right font-bold text-emerald-400">87.8%</td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const pnlData = [{"fiscal_year": "FY2024", "ingresos": 365784541.84, "costos": 42889482.55, "utilidad_bruta": 322895059.29, "gastos": 531106601.67, "ebitda": -208211542.38}, {"fiscal_year": "FY2025", "ingresos": 368784101.31, "costos": 43128213.75, "utilidad_bruta": 325655887.56, "gastos": 539295520.67, "ebitda": -213639633.11}, {"fiscal_year": "FY2026", "ingresos": 239809639.74, "costos": 29255133.89, "utilidad_bruta": 210554505.85, "gastos": 363379733.42, "ebitda": -152825227.57}];
+    const entityData = [{"entity_name": "Apex Global Corp (HQ)", "country": "United States", "functional_currency": "USD", "transacciones": 134774, "ingresos": 437866691.8, "gastos": 644073671.88}, {"entity_name": "Apex Iberia Logistics S.L.", "country": "Spain", "functional_currency": "EUR", "transacciones": 75142, "ingresos": 245397098.94, "gastos": 362923734.8}, {"entity_name": "Apex Andina Soluciones S.A.S.", "country": "Colombia", "functional_currency": "COP", "transacciones": 54090, "ingresos": 176228143.33, "gastos": 252039640.9}, {"entity_name": "Apex Operaciones del Caribe C.A.", "country": "Venezuela", "functional_currency": "VES", "transacciones": 35994, "ingresos": 114886348.82, "gastos": 174744808.18}];
+    const ccData = [{"cost_center_name": "Recursos Humanos & Talento", "total_gasto": 1150286015.38}, {"cost_center_name": "Ingenier\u00eda de Software & Cloud Platform", "total_gasto": 172883882.95}, {"cost_center_name": "Ventas & Growth Marketing", "total_gasto": 66714249.57}, {"cost_center_name": "Finanzas & Contabilidad Corporativa", "total_gasto": 43897707.86}, {"cost_center_name": "Operaciones & Soporte de Clientes", "total_gasto": 0.0}];
+    const monthlyData = [{"year": 2024, "month": 1, "ym": "2024-01", "ingresos": 31987371.51, "gastos": 47520834.08}, {"year": 2024, "month": 2, "ym": "2024-02", "ingresos": 27978330.48, "gastos": 44446589.07}, {"year": 2024, "month": 3, "ym": "2024-03", "ingresos": 31378675.99, "gastos": 43078743.72}, {"year": 2024, "month": 4, "ym": "2024-04", "ingresos": 30483081.43, "gastos": 41411775.69}, {"year": 2024, "month": 5, "ym": "2024-05", "ingresos": 30852628.81, "gastos": 48648279.77}, {"year": 2024, "month": 6, "ym": "2024-06", "ingresos": 30467091.17, "gastos": 46068893.55}, {"year": 2024, "month": 7, "ym": "2024-07", "ingresos": 31493730.14, "gastos": 42039703.97}, {"year": 2024, "month": 8, "ym": "2024-08", "ingresos": 31345542.22, "gastos": 43325594.73}, {"year": 2024, "month": 9, "ym": "2024-09", "ingresos": 29912620.33, "gastos": 41644748.78}, {"year": 2024, "month": 10, "ym": "2024-10", "ingresos": 31152266.14, "gastos": 44161327.79}, {"year": 2024, "month": 11, "ym": "2024-11", "ingresos": 28880748.88, "gastos": 42052714.43}, {"year": 2024, "month": 12, "ym": "2024-12", "ingresos": 29852454.74, "gastos": 46707396.09}, {"year": 2025, "month": 1, "ym": "2025-01", "ingresos": 30121228.9, "gastos": 46852641.77}, {"year": 2025, "month": 2, "ym": "2025-02", "ingresos": 27679560.46, "gastos": 42671852.57}, {"year": 2025, "month": 3, "ym": "2025-03", "ingresos": 29059186.6, "gastos": 47856035.5}, {"year": 2025, "month": 4, "ym": "2025-04", "ingresos": 29861344.79, "gastos": 42459972.78}, {"year": 2025, "month": 5, "ym": "2025-05", "ingresos": 30970444.58, "gastos": 45315774.38}, {"year": 2025, "month": 6, "ym": "2025-06", "ingresos": 30845469.26, "gastos": 43107132.16}, {"year": 2025, "month": 7, "ym": "2025-07", "ingresos": 32178904.7, "gastos": 45057497.21}, {"year": 2025, "month": 8, "ym": "2025-08", "ingresos": 31957741.5, "gastos": 47006369.17}, {"year": 2025, "month": 9, "ym": "2025-09", "ingresos": 32064879.9, "gastos": 44998580.79}, {"year": 2025, "month": 10, "ym": "2025-10", "ingresos": 31702289.12, "gastos": 47355618.55}, {"year": 2025, "month": 11, "ym": "2025-11", "ingresos": 31539928.78, "gastos": 43065862.64}, {"year": 2025, "month": 12, "ym": "2025-12", "ingresos": 30803122.72, "gastos": 43548183.15}, {"year": 2026, "month": 1, "ym": "2026-01", "ingresos": 30134496.5, "gastos": 46738114.75}, {"year": 2026, "month": 2, "ym": "2026-02", "ingresos": 28033181.36, "gastos": 43014577.83}, {"year": 2026, "month": 3, "ym": "2026-03", "ingresos": 32070694.47, "gastos": 42347661.96}, {"year": 2026, "month": 4, "ym": "2026-04", "ingresos": 28793223.63, "gastos": 47051379.49}, {"year": 2026, "month": 5, "ym": "2026-05", "ingresos": 31491867.43, "gastos": 44961357.84}, {"year": 2026, "month": 6, "ym": "2026-06", "ingresos": 29817543.16, "gastos": 46945216.19}, {"year": 2026, "month": 7, "ym": "2026-07", "ingresos": 30119803.12, "gastos": 48866319.35}, {"year": 2026, "month": 8, "ym": "2026-08", "ingresos": 29348830.07, "gastos": 43455106.01}];
+
+    // Chart 1: P&L
+    new Chart(document.getElementById('chartPnl'), {
+      type: 'bar',
+      data: {
+        labels: pnlData.map(d => d.fiscal_year),
+        datasets: [
+          { label: 'Ingresos', data: pnlData.map(d => d.ingresos / 1e6), backgroundColor: '#3b82f6' },
+          { label: 'Costos', data: pnlData.map(d => d.costos / 1e6), backgroundColor: '#f59e0b' },
+          { label: 'Gastos', data: pnlData.map(d => d.gastos / 1e6), backgroundColor: '#ef4444' }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#94a3b8', font: { family: 'JetBrains Mono' } } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        }
+      }
+    });
+
+    // Chart 2: Entities
+    new Chart(document.getElementById('chartEntity'), {
+      type: 'bar',
+      data: {
+        labels: entityData.map(d => d.entity_name.split(' ')[0] + ' (' + d.country + ')'),
+        datasets: [
+          { label: 'Ingresos (M$)', data: entityData.map(d => d.ingresos / 1e6), backgroundColor: '#10b981' },
+          { label: 'Gastos (M$)', data: entityData.map(d => d.gastos / 1e6), backgroundColor: '#8b5cf6' }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#94a3b8' } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        }
+      }
+    });
+
+    // Chart 3: Cost Centers
+    new Chart(document.getElementById('chartCC'), {
+      type: 'doughnut',
+      data: {
+        labels: ccData.map(d => d.cost_center_name.split(' ')[0]),
+        datasets: [{
+          data: ccData.map(d => d.total_gasto),
+          backgroundColor: ['#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#ec4899']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 } } } }
+      }
+    });
+
+    // Chart 4: Monthly Trend
+    new Chart(document.getElementById('chartMonthly'), {
+      type: 'line',
+      data: {
+        labels: monthlyData.map(d => d.ym),
+        datasets: [
+          { label: 'Ingresos', data: monthlyData.map(d => d.ingresos / 1e6), borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', fill: true, tension: 0.3 },
+          { label: 'Gastos', data: monthlyData.map(d => d.gastos / 1e6), borderColor: '#ef4444', backgroundColor: 'transparent', borderDash: [4, 4], tension: 0.3 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#94a3b8' } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8', maxTicksLimit: 12 }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
