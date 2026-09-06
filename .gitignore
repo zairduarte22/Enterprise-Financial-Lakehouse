@@ -28,3 +28,6 @@ dbt_project/.user.yml
 .idea/
 .DS_Store
 Thumbs.db
+
+# Private personal notes & guides (not uploaded to GitHub)
+docs/
